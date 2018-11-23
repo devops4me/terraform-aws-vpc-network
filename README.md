@@ -7,7 +7,7 @@ No need to specify **which** availability zones. You can request less, the same 
 
 ## Usage
 
-    module vpc_subnets
+    module vpc-network
     {
         source                 = "github.com/devops4me/terraform-aws-vpc-network"
         in_vpc_cidr            = "10.245.0.0/16"
@@ -18,17 +18,17 @@ No need to specify **which** availability zones. You can request less, the same 
 
     output subnet_ids
     {
-        value = "${ module.vpc_subnets.out_subnet_ids }"
+        value = "${ module.vpc-network.out_subnet_ids }"
     }
 
     output private_subnet_ids
     {
-        value = "${ module.vpc_subnets.out_private_subnet_ids }"
+        value = "${ module.vpc-network.out_private_subnet_ids }"
     }
 
     output public_subnet_ids
     {
-        value = "${ module.vpc_subnets.out_public_subnet_ids }"
+        value = "${ module.vpc-network.out_public_subnet_ids }"
     }
 
 
@@ -134,7 +134,7 @@ Here are the most popular **output variables** exported from this VPC and subnet
 
 **v0.1.0002** is the current stable version of this Terraform module. To avoid say **testing with one version and going into production with another** you can employ the ref tag as shown below.
 
-    module vpc_subnets
+    module vpc-network
     {
         source                 = "github.com/devops4me/terraform-aws-vpc-network?ref=v0.1.0002"
         in_vpc_cidr            = "10.245.0.0/16"
@@ -145,7 +145,7 @@ Here are the most popular **output variables** exported from this VPC and subnet
 
 Or you can use the version parameter that is more explicit and affords you the opportunity to detail a **[range of versions that are acceptable](https://www.terraform.io/docs/modules/usage.html)** by employing **version constraint syntax**.
 
-    module vpc_subnets
+    module vpc-network
     {
         source       = "github.com/devops4me/terraform-aws-vpc-network"
         version      =  "~> v0.1.0"
