@@ -216,7 +216,7 @@ resource aws_route_table private
         Name     = "route-table-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
         Class    = "${ var.in_ecosystem }"
         Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc     = "This route table associated to private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
+        Desc     = "This route table associated with private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
     }
 }
 
