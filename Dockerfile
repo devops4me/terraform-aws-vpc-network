@@ -23,16 +23,6 @@ RUN apt-get update && apt-get --assume-yes install -qq -o=Dpkg::Use-Pty=0 \
 
 
 # --->
-# ---> The documentation here explains the makeup of the
-# ---> powerful useradd command.
-# --->
-# ---> https://linux.die.net/man/8/useradd
-# --->
-
-RUN useradd --home /home/tester --create-home --shell /bin/bash --gid root tester
-
-
-# --->
 # ---> Install the Terraform binary.
 # --->
 
@@ -44,11 +34,5 @@ RUN \
     terraform --version
 
 
-# --->
-# ---> As tester, we initialize terraform ready
-# ---> for the apply command that will begin the
-# ---> process of creating infrastructure.
-# --->
-
-USER tester
-WORKDIR /home/tester
+USER ubuntu
+WORKDIR /home/ubuntu
