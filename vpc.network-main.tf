@@ -170,6 +170,10 @@ resource aws_eip nat_gw_ip
  | -- to route traffic from the private subnet in its availability
  | -- zone to external networks and the internet at large.
  | --
+ | -- IMPORTANT - DO NOT LET TERRAFORM BRING UP EC2 INSTANCES INSIDE PRIVATE
+ | -- SUBNETS BEFORE (SLOW TO CREATE) NAT GATEWAYS ARE UP AND RUNNING.
+ | -- (see comment against definition of resource.aws_route.private).
+ | --
  | -- It does this from within a public subnet and requires
  | -- an internet gateway and an elastic IP address.
  | --
@@ -229,6 +233,15 @@ resource aws_route_table private
  | -- are designed to allow network interfaces (in the private subnets)
  | -- to initiate connections to the internet via its corresponding nat gateway
  | -- in a sister public subnet in the same availability zone.
+ | --
+ | -- IMPORTANT - DO NOT LET TERRAFORM BRING UP EC2 INSTANCES INSIDE PRIVATE
+ | -- SUBNETS BEFORE (SLOW TO CREATE) NAT GATEWAYS ARE UP AND RUNNING.
+ | --
+ | -- Suppose systemd on bootup wants to get a rabbitmq docker image as
+ | -- specified by a service unit file. Terraform will quickly bring up ec2
+ | -- instances and then proceed to slowly create NAT gateways. To avoid
+ | -- these types of bootup errors we must declare explicit dependencies to
+ | -- delay ec2 creation until the private gateways and routes are ready.
  | --
 */
 resource aws_route private
