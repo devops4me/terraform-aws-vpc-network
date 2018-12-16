@@ -285,7 +285,8 @@ resource aws_flow_log troubleshoot
 
 resource aws_s3_bucket flowlogs
 {
-    name = "vpc.network.flow.logs"
+    bucket = "vpc.network.flow.logs"
+    acl    = "log-delivery-write"
 }
 
 
