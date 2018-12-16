@@ -278,21 +278,28 @@ resource aws_route_table_association private
 resource aws_flow_log troubleshoot
 {
     vpc_id               = "${ aws_vpc.this_vpc.id }"
-    log_destination      = "${aws_s3_bucket.flowlogs.arn}"
+    log_destination      = "${ data.aws_s3_bucket.flow_logs.arn }"
     log_destination_type = "s3"
     traffic_type         = "ALL"
 }
 
+
+data aws_s3_bucket flow_logs
+{
+    bucket = "vpc.network.flow.logs"
+}
+
+
+
+
+
+/*
 resource aws_s3_bucket flowlogs
 {
     bucket = "vpc.network.flow.logs"
     acl    = "log-delivery-write"
 }
 
-
-
-
-/*
 resource "aws_s3_bucket" "log_bucket" {
   bucket        = "${local.log_bucket_name}"
   policy        = "${data.aws_iam_policy_document.bucket_policy.json}"
