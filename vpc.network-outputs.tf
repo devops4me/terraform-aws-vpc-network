@@ -72,6 +72,6 @@ output out_public_subnet_ids
 */
 output out_outgoing_routes
 {
-    description = "Aids creation of explicit dependency if machines are created in private subnets."
+    description = "Aids creation of explicit dependency for instances brought up in private subnets."
     value       = "${aws_route.private.*.id}"
 }

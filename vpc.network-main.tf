@@ -275,6 +275,57 @@ resource aws_route_table_association private
 
 
 
+resource aws_flow_log troubleshoot
+{
+    vpc_id               = "${ aws_vpc.this_vpc.id }"
+    log_destination      = "${aws_s3_bucket.flowlogs.arn}"
+    log_destination_type = "s3"
+    traffic_type         = "ALL"
+}
+
+resource aws_s3_bucket flowlogs
+{
+    name = "vpc.network.flow.logs"
+}
+
+
+
+
+/*
+resource "aws_s3_bucket" "log_bucket" {
+  bucket        = "${local.log_bucket_name}"
+  policy        = "${data.aws_iam_policy_document.bucket_policy.json}"
+  force_destroy = true
+  tags          = "${local.tags}"
+
+  lifecycle_rule {
+    id      = "log-expiration"
+    enabled = "true"
+
+    expiration {
+      days = "7"
+    }
+  }
+}
+*/
+
+
+/*
+data "aws_iam_policy_document" "bucket_policy" {
+  statement {
+    sid       = "AllowToPutLoadBalancerLogsToS3Bucket"
+    actions   = ["s3:PutObject"]
+    resources = ["arn:aws:s3:::${local.log_bucket_name}/${var.log_location_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_elb_service_account.main.id}:root"]
+    }
+  }
+}
+*/
+
+
 ### ################# ###
 ### [[module]] ecosys ###
 ### ################# ###
