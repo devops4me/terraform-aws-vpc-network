@@ -17,10 +17,10 @@ resource aws_vpc this_vpc
 
     tags
     {
-        Name   = "vpc-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Class = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc   = "This vpc for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
+        Name   = "vpc-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Class = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc   = "This vpc for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
     }
 }
 
@@ -45,10 +45,10 @@ resource aws_subnet private
 
     tags
     {
-        Name     = "subnet-${ var.in_ecosystem }-${ module.ecosys.out_stamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
-        Class    = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc     = "Private subnet no.${ count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ module.ecosys.out_history_note }"
+        Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
+        Class    = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc     = "Private subnet no.${ count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_tag_description }"
     }
 
 }
@@ -74,10 +74,10 @@ resource aws_subnet public
 
     tags
     {
-        Name     = "subnet-${ var.in_ecosystem }-${ module.ecosys.out_stamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
-        Class    = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc     = "Public subnet no.${ var.in_num_private_subnets + count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ module.ecosys.out_history_note }"
+        Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
+        Class    = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc     = "Public subnet no.${ var.in_num_private_subnets + count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_tag_description }"
     }
 
 }
@@ -103,63 +103,10 @@ resource aws_internet_gateway this
 
     tags
     {
-        Name  = "net-gateway-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Class = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc  = "This internet gateway for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
-    }
-}
-
-
-/*
- | --
- | -- Almost all services make outgoing (egress) connections to the internet
- | -- regardless whether those services are in public or private subnets. So
- | -- an internet gateway and route are always created unless the variable
- | -- in_create_public_gateway is passed in and set to false.
- | --
- | -- This route through the internet gateway is created against the VPC's
- | -- default route table. The destination is set as 0.0.0.0/0 (everywhere).
- | --
-*/
-resource aws_route public
-{
-    count  = "${ var.in_create_public_gateway }"
-
-    route_table_id         = "${ aws_vpc.this_vpc.default_route_table_id }"
-    destination_cidr_block = "0.0.0.0/0"
-    gateway_id             = "${ aws_internet_gateway.this.id }"
-}
-
-
-/*
- | --
- | -- This elastic IP address is presented to the NAT
- | -- (network address translator) and is only required
- | -- (like the NAT) when private subnets need to connect
- | -- externally to a publicly addressable endpoint.
- | --
- | -- Every availability zone (and public/private subnet
- | -- pairing) will have its own NAT gateway and hence
- | -- its own elastic IP address.
- | --
- | -- This elastic IP is created if at least 1 private subnet
- | -- exists and in_create_private_gateway is true.
- | --
-*/
-resource aws_eip nat_gw_ip
-{
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
-
-    vpc        = true
-    depends_on = [ "aws_internet_gateway.this" ]
-
-    tags
-    {
-        Name  = "elastic-ip-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Class = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc  = "This elastic IP in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
+        Name  = "net-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Class = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc  = "This internet gateway for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
     }
 }
 
@@ -196,34 +143,32 @@ resource aws_nat_gateway this
 
     tags
     {
-        Name     = "nat-gateway-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Class    = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc     = "This NAT gateway in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
+        Name     = "nat-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Class    = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc     = "This NAT gateway in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
     }
 }
 
 
 /*
  | --
- | -- These route tables are required for holding private routes
- | -- so that private network interfaces (in the private subnets)
- | -- can initiate connections to the internet.
+ | -- Almost all services make outgoing (egress) connections to the internet
+ | -- regardless whether those services are in public or private subnets. So
+ | -- an internet gateway and route are always created unless the variable
+ | -- in_create_public_gateway is passed in and set to false.
+ | --
+ | -- This route through the internet gateway is created against the VPC's
+ | -- default route table. The destination is set as 0.0.0.0/0 (everywhere).
  | --
 */
-resource aws_route_table private
+resource aws_route public
 {
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+    count  = "${ var.in_create_public_gateway }"
 
-    vpc_id = "${ aws_vpc.this_vpc.id }"
-
-    tags
-    {
-        Name     = "route-table-${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Class    = "${ var.in_ecosystem }"
-        Instance = "${ var.in_ecosystem }-${ module.ecosys.out_stamp }"
-        Desc     = "This route table associated with private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem } ${ module.ecosys.out_history_note }"
-    }
+    route_table_id         = "${ aws_vpc.this_vpc.default_route_table_id }"
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id             = "${ aws_internet_gateway.this.id }"
 }
 
 
@@ -257,6 +202,60 @@ resource aws_route private
 
 /*
  | --
+ | -- This elastic IP address is presented to the NAT
+ | -- (network address translator) and is only required
+ | -- (like the NAT) when private subnets need to connect
+ | -- externally to a publicly addressable endpoint.
+ | --
+ | -- Every availability zone (and public/private subnet
+ | -- pairing) will have its own NAT gateway and hence
+ | -- its own elastic IP address.
+ | --
+ | -- This elastic IP is created if at least 1 private subnet
+ | -- exists and in_create_private_gateway is true.
+ | --
+*/
+resource aws_eip nat_gw_ip
+{
+    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+
+    vpc        = true
+    depends_on = [ "aws_internet_gateway.this" ]
+
+    tags
+    {
+        Name  = "elastic-ip-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Class = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc  = "This elastic IP in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+    }
+}
+
+
+/*
+ | --
+ | -- These route tables are required for holding private routes
+ | -- so that private network interfaces (in the private subnets)
+ | -- can initiate connections to the internet.
+ | --
+*/
+resource aws_route_table private
+{
+    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+    vpc_id = "${ aws_vpc.this_vpc.id }"
+
+    tags
+    {
+        Name     = "route-table-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Class    = "${ var.in_ecosystem_name }"
+        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
+        Desc     = "This route table associated with private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+    }
+}
+
+
+/*
+ | --
  | -- These route table associations per each availability zone binds
  | --
  | --   a) the route inside the route table that ...
@@ -274,7 +273,18 @@ resource aws_route_table_association private
 }
 
 
-
+/*
+ | --
+ | -- Flow logs are a create way to troubleshoot connectivity and to
+ | -- diagnose overly lenient or restrictive security group rules.
+ | --
+ | --   S3 Bucket Name  => vpc.network.flow.logs
+ | --
+ | -- The S3 bucket must exist and as long as the same IAM user entity
+ | -- (naturally in the same account) creating the flow logs has also
+ | -- created the bucket, there will be no permissional qualms.
+ | --
+*/
 resource aws_flow_log troubleshoot
 {
     vpc_id               = "${ aws_vpc.this_vpc.id }"
@@ -284,61 +294,12 @@ resource aws_flow_log troubleshoot
 }
 
 
+/*
+ | --
+ | -- Pull in the existing flow log destination S3 bucket.
+ | --
+*/
 data aws_s3_bucket flow_logs
 {
     bucket = "vpc.network.flow.logs"
-}
-
-
-
-
-
-/*
-resource aws_s3_bucket flowlogs
-{
-    bucket = "vpc.network.flow.logs"
-    acl    = "log-delivery-write"
-}
-
-resource "aws_s3_bucket" "log_bucket" {
-  bucket        = "${local.log_bucket_name}"
-  policy        = "${data.aws_iam_policy_document.bucket_policy.json}"
-  force_destroy = true
-  tags          = "${local.tags}"
-
-  lifecycle_rule {
-    id      = "log-expiration"
-    enabled = "true"
-
-    expiration {
-      days = "7"
-    }
-  }
-}
-*/
-
-
-/*
-data "aws_iam_policy_document" "bucket_policy" {
-  statement {
-    sid       = "AllowToPutLoadBalancerLogsToS3Bucket"
-    actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${local.log_bucket_name}/${var.log_location_prefix}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_elb_service_account.main.id}:root"]
-    }
-  }
-}
-*/
-
-
-### ################# ###
-### [[module]] ecosys ###
-### ################# ###
-
-module ecosys
-{
-    source = "github.com/devops4me/terraform-aws-stamps"
 }
