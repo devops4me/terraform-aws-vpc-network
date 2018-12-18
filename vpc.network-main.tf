@@ -271,35 +271,3 @@ resource aws_route_table_association private
     subnet_id      = "${ element( aws_subnet.private.*.id, count.index ) }"
     route_table_id = "${ element( aws_route_table.private.*.id, count.index ) }"
 }
-
-
-/*
- | --
- | -- Flow logs are a create way to troubleshoot connectivity and to
- | -- diagnose overly lenient or restrictive security group rules.
- | --
- | --   S3 Bucket Name  => vpc.network.flow.logs
- | --
- | -- The S3 bucket must exist and as long as the same IAM user entity
- | -- (naturally in the same account) creating the flow logs has also
- | -- created the bucket, there will be no permissional qualms.
- | --
-*/
-resource aws_flow_log troubleshoot
-{
-    vpc_id               = "${ aws_vpc.this_vpc.id }"
-    log_destination      = "${ data.aws_s3_bucket.flow_logs.arn }"
-    log_destination_type = "s3"
-    traffic_type         = "ALL"
-}
-
-
-/*
- | --
- | -- Pull in the existing flow log destination S3 bucket.
- | --
-*/
-data aws_s3_bucket flow_logs
-{
-    bucket = "vpc.network.flow.logs"
-}
