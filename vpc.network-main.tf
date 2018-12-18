@@ -273,6 +273,11 @@ resource aws_route_table_association private
 }
 
 
+################################################################
+############## +++++++++++++++++++++++++++++++++ ###############
+############## Troubleshoot-ing Branch Resources ###############
+############## +++++++++++++++++++++++++++++++++ ###############
+
 /*
  | --
  | -- Flow logs are a create way to troubleshoot connectivity and to
