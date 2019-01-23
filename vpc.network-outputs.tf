@@ -14,17 +14,6 @@ output out_vpc_id
 }
 
 
-### ##################### ###
-### [[output]] out_rtb_id ###
-### ##################### ###
-
-output out_rtb_id
-{
-    description = "The ID of the default route table for this VPC."
-    value       = "${aws_vpc.this_vpc.default_route_table_id}"
-}
-
-
 ### ######################### ###
 ### [[output]] out_subnet_ids ###
 ### ######################### ###
