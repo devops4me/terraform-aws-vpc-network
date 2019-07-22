@@ -9,14 +9,14 @@
  | -- the geographical auspices of the region.
  | --
 */
-resource aws_vpc this_vpc
-{
+resource aws_vpc this_vpc {
+
     cidr_block   = "${ var.in_vpc_cidr }"
     enable_dns_support = true
     enable_dns_hostnames = true
 
-    tags
-    {
+    tags {
+
         Name   = "vpc-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -33,8 +33,8 @@ resource aws_vpc this_vpc
  | -- "element" which rotates back to the first zone if the
  | -- subnet count exceeds the zone count.
 */
-resource aws_subnet private
-{
+resource aws_subnet private {
+
     count = "${ var.in_num_private_subnets }"
 
     cidr_block        = "${ cidrsubnet( var.in_vpc_cidr, var.in_subnets_max, count.index ) }"
@@ -43,8 +43,8 @@ resource aws_subnet private
 
     map_public_ip_on_launch = false
 
-    tags
-    {
+    tags {
+
         Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
         Class    = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -62,8 +62,8 @@ resource aws_subnet private
  | -- "element" which rotates back to the first zone if the
  | -- subnet count exceeds the zone count.
 */
-resource aws_subnet public
-{
+resource aws_subnet public {
+
     count = "${ var.in_num_public_subnets }"
 
     cidr_block        = "${ cidrsubnet( var.in_vpc_cidr, var.in_subnets_max, var.in_num_private_subnets + count.index ) }"
@@ -72,8 +72,8 @@ resource aws_subnet public
 
     map_public_ip_on_launch = true
 
-    tags
-    {
+    tags {
+
         Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
         Class    = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -95,14 +95,13 @@ resource aws_subnet public
  | -- which must be created per availability zone.
  | --
 */
-resource aws_internet_gateway this
-{
-    count  = "${ var.in_create_public_gateway }"
+resource aws_internet_gateway this {
 
+    count  = "${ var.in_create_public_gateway }"
     vpc_id = "${ aws_vpc.this_vpc.id }"
 
-    tags
-    {
+    tags {
+
         Name  = "net-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -133,16 +132,16 @@ resource aws_internet_gateway this
  | -- its own elastic IP address.
  | --
 */
-resource aws_nat_gateway this
-{
+resource aws_nat_gateway this {
+
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
 
     allocation_id = "${ element( aws_eip.nat_gw_ip.*.id, count.index ) }"
     subnet_id     = "${ element( aws_subnet.public.*.id, count.index ) }"
     depends_on    = [ "aws_internet_gateway.this" ]
 
-    tags
-    {
+    tags {
+
         Name     = "nat-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class    = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -162,8 +161,8 @@ resource aws_nat_gateway this
  | -- default route table. The destination is set as 0.0.0.0/0 (everywhere).
  | --
 */
-resource aws_route public
-{
+resource aws_route public {
+
     count  = "${ var.in_create_public_gateway }"
 
     route_table_id         = "${ aws_vpc.this_vpc.default_route_table_id }"
@@ -189,8 +188,8 @@ resource aws_route public
  | -- delay ec2 creation until the private gateways and routes are ready.
  | --
 */
-resource aws_route private
-{
+resource aws_route private {
+
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
 
     route_table_id = "${ element( aws_route_table.private.*.id, count.index ) }"
@@ -215,15 +214,15 @@ resource aws_route private
  | -- exists and in_create_private_gateway is true.
  | --
 */
-resource aws_eip nat_gw_ip
-{
+resource aws_eip nat_gw_ip {
+
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
 
     vpc        = true
     depends_on = [ "aws_internet_gateway.this" ]
 
-    tags
-    {
+    tags {
+
         Name  = "elastic-ip-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -239,13 +238,13 @@ resource aws_eip nat_gw_ip
  | -- can initiate connections to the internet.
  | --
 */
-resource aws_route_table private
-{
+resource aws_route_table private {
+
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
     vpc_id = "${ aws_vpc.this_vpc.id }"
 
-    tags
-    {
+    tags {
+
         Name     = "route-table-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class    = "${ var.in_ecosystem_name }"
         Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
@@ -264,8 +263,8 @@ resource aws_route_table private
  | --   d) private interfaces that need to connect to the internet
  | --
 */
-resource aws_route_table_association private
-{
+resource aws_route_table_association private {
+
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
 
     subnet_id      = "${ element( aws_subnet.private.*.id, count.index ) }"
