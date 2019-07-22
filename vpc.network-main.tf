@@ -15,7 +15,7 @@ resource aws_vpc this_vpc {
     enable_dns_support = true
     enable_dns_hostnames = true
 
-    tags {
+    tags = {
 
         Name   = "vpc-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
@@ -72,7 +72,7 @@ resource aws_subnet public {
 
     map_public_ip_on_launch = true
 
-    tags {
+    tags = {
 
         Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
         Class    = "${ var.in_ecosystem_name }"
@@ -100,7 +100,7 @@ resource aws_internet_gateway this {
     count  = "${ var.in_create_public_gateway }"
     vpc_id = "${ aws_vpc.this_vpc.id }"
 
-    tags {
+    tags = {
 
         Name  = "net-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
@@ -140,7 +140,7 @@ resource aws_nat_gateway this {
     subnet_id     = "${ element( aws_subnet.public.*.id, count.index ) }"
     depends_on    = [ "aws_internet_gateway.this" ]
 
-    tags {
+    tags = {
 
         Name     = "nat-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class    = "${ var.in_ecosystem_name }"
@@ -221,7 +221,7 @@ resource aws_eip nat_gw_ip {
     vpc        = true
     depends_on = [ "aws_internet_gateway.this" ]
 
-    tags {
+    tags = {
 
         Name  = "elastic-ip-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class = "${ var.in_ecosystem_name }"
