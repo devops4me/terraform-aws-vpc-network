@@ -43,7 +43,7 @@ resource aws_subnet private {
 
     map_public_ip_on_launch = false
 
-    tags {
+    tags = {
 
         Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
         Class    = "${ var.in_ecosystem_name }"
@@ -243,7 +243,7 @@ resource aws_route_table private {
     count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
     vpc_id = "${ aws_vpc.this_vpc.id }"
 
-    tags {
+    tags = {
 
         Name     = "route-table-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
         Class    = "${ var.in_ecosystem_name }"
