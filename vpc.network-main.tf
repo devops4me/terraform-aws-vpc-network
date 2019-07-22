@@ -97,7 +97,21 @@ resource aws_subnet public {
 */
 resource aws_internet_gateway this {
 
-    count  = "${ var.in_create_public_gateway }"
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
+    count  = tonumber( "${ var.in_create_public_gateway }" )
     vpc_id = "${ aws_vpc.this_vpc.id }"
 
     tags = {
