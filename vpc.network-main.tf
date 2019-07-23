@@ -190,7 +190,7 @@ resource aws_route public {
 */
 resource aws_route private {
 
-    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0
+    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0 )
 
     route_table_id = "${ element( aws_route_table.private.*.id, count.index ) }"
     nat_gateway_id = "${ element( aws_nat_gateway.this.*.id, count.index ) }"
