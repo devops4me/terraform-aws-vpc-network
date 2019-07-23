@@ -163,7 +163,7 @@ resource aws_nat_gateway this {
 */
 resource aws_route public {
 
-    count  = "${ var.in_create_public_gateway }"
+    count  = var.in_create_public_gateway ? 1 : 0
 
     route_table_id         = "${ aws_vpc.this_vpc.default_route_table_id }"
     destination_cidr_block = "0.0.0.0/0"
@@ -216,7 +216,7 @@ resource aws_route private {
 */
 resource aws_eip nat_gw_ip {
 
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0 )
 
     vpc        = true
     depends_on = [ "aws_internet_gateway.this" ]
@@ -265,7 +265,7 @@ resource aws_route_table private {
 */
 resource aws_route_table_association private {
 
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0 )
 
     subnet_id      = "${ element( aws_subnet.private.*.id, count.index ) }"
     route_table_id = "${ element( aws_route_table.private.*.id, count.index ) }"
