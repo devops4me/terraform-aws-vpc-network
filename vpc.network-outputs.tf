@@ -21,7 +21,7 @@ output out_vpc_id {
 output out_subnet_ids {
 
     description = "Every subnet ID in every availability zone of this VPC."
-    value       = "${ aws_subnet.private.*.id }", "${ aws_subnet.public.*.id }"
+    value       = concat( "${ aws_subnet.private.*.id }", "${ aws_subnet.public.*.id }" )
 }
 
 
