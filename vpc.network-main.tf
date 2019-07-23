@@ -97,22 +97,8 @@ resource aws_subnet public {
 */
 resource aws_internet_gateway this {
 
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-## ==================> does this work - this change may not produce 0 or 1 converting from a boolean
-    count  = tonumber( "${ var.in_create_public_gateway }" )
-    vpc_id = "${ aws_vpc.this_vpc.id }"
+    count = var.in_create_public_gateway == true ? 1 : 0
+    vpc_id = aws_vpc.this_vpc.id
 
     tags = {
 
@@ -148,7 +134,7 @@ resource aws_internet_gateway this {
 */
 resource aws_nat_gateway this {
 
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
+    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0 )
 
     allocation_id = "${ element( aws_eip.nat_gw_ip.*.id, count.index ) }"
     subnet_id     = "${ element( aws_subnet.public.*.id, count.index ) }"
@@ -254,8 +240,8 @@ resource aws_eip nat_gw_ip {
 */
 resource aws_route_table private {
 
-    count = "${ var.in_num_private_subnets * var.in_create_private_gateway }"
-    vpc_id = "${ aws_vpc.this_vpc.id }"
+    count = var.in_num_private_subnets * ( var.in_create_private_gateway ? 1 : 0 )
+    vpc_id = aws_vpc.this_vpc.id
 
     tags = {
 
