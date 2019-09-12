@@ -16,21 +16,21 @@ pipeline
         {
             steps
             {
-		sh 'terraform init integration.test.dir'
+		sh 'terraform init example'
             }
         }
         stage('terraform apply')
         {
             steps
             {
-		sh 'terraform apply -auto-approve integration.test.dir'
+		sh 'terraform apply -auto-approve example'
             }
         }
         stage('terraform destroy')
         {
             steps
             {
-		sh 'terraform destroy -auto-approve integration.test.dir'
+		sh 'terraform destroy -auto-approve example'
             }
         }
     }

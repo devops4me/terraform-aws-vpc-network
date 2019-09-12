@@ -3,9 +3,21 @@
 
 This module's **default behaviour** is to create a VPC and then **create one private and one public subnet per availability zone** in the VPC's region. In Frankfurt 6 subnets would be created as there are 3 availability zones.
 
-No need to specify **which** availability zones. You can request less, the same or more subnets than there are availability zones and this module dishes them out in a fair (round robin) manner.
+### Resources Created
 
-## Usage
+This module houses your infrastructure within a secure VPC and it creates the networking resources for routing traffic to your services and conversely enabling your services to access the internet. This module creates
+
+- a VPC (virtual private cloud)
+- subnets within the VPC across one or more availability zones
+- an **internet gateway** unless **`in_num_public_subnets`** is zero
+- an **elastic IP address** unless **`in_num_public_subnets`** is zero
+- a **nat gateway** attached to public subnets for routing outgoing traffic
+- **route tables** along with the necessary public and private routes
+- **associations** that bind subnets to route tables
+
+The subnets are dished out across availability zones in a round robin fashion. You can request less, the same or more (private/public) subnets than there are availability zones.
+
+## Module Usage
 
     module vpc-network
     {
@@ -13,26 +25,15 @@ No need to specify **which** availability zones. You can request less, the same 
         in_vpc_cidr            = "10.245.0.0/16"
         in_num_private_subnets = 6
         in_num_public_subnets  = 3
-        in_ecosystem           = "kubernetes-cluster"
     }
 
-    output subnet_ids
-    {
-        value = "${ module.vpc-network.out_subnet_ids }"
-    }
-
-    output private_subnet_ids
-    {
-        value = "${ module.vpc-network.out_private_subnet_ids }"
-    }
-
-    output public_subnet_ids
-    {
-        value = "${ module.vpc-network.out_public_subnet_ids }"
-    }
+The most common use case is to specify the VPC Cidr, the number of public and private subnets.
 
 
-The most common usage is to specify the VPC Cidr, the number of public / private subnets and the class of ecosystem being built.
+## Run the Examples | VPC Network
+
+You can test-drive this VPC and su
+
 
 ## [Examples and Tests](test-vpc.network)
 
