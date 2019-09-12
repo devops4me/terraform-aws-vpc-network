@@ -3,9 +3,9 @@
 ################ Module [[[subnets]]] Input Variables List. ########
 ################ ########################################## ########
 
-### ######################## ###
-### [[variable]] in_vpc_cidr ###
-### ######################## ###
+### ########### ###
+### in_vpc_cidr ###
+### ########### ###
 
 variable in_vpc_cidr {
 
@@ -14,9 +14,9 @@ variable in_vpc_cidr {
 }
 
 
-### ################################### ###
-### [[variable]] in_num_private_subnets ###
-### ################################### ###
+### ###################### ###
+### in_num_private_subnets ###
+### ###################### ###
 
 variable in_num_private_subnets {
 
@@ -25,9 +25,9 @@ variable in_num_private_subnets {
 }
 
 
-### ################################## ###
-### [[variable]] in_num_public_subnets ###
-### ################################## ###
+### ##################### ###
+### in_num_public_subnets ###
+### ##################### ###
 
 variable in_num_public_subnets {
 
@@ -36,9 +36,9 @@ variable in_num_public_subnets {
 }
 
 
-### ########################### ###
-### [[variable]] in_subnets_max ###
-### ########################### ###
+### ############## ###
+### in_subnets_max ###
+### ############## ###
 
 variable in_subnets_max {
 
@@ -47,9 +47,9 @@ variable in_subnets_max {
 }
 
 
-### ##################################### ###
-### [[variable]] in_create_public_gateway ###
-### ##################################### ###
+### ######################## ###
+### in_create_public_gateway ###
+### ######################## ###
 
 variable in_create_public_gateway {
 
@@ -58,9 +58,9 @@ variable in_create_public_gateway {
 }
 
 
-### ###################################### ###
-### [[variable]] in_create_private_gateway ###
-### ###################################### ###
+### ######################### ###
+### in_create_private_gateway ###
+### ######################### ###
 
 variable in_create_private_gateway {
     description = "If private subnets exist an EIP, a NAT gateway, route and subnet association are created unless this variable is supplied as false."
@@ -68,29 +68,29 @@ variable in_create_private_gateway {
 }
 
 
-### ################# ###
-### in_ecosystem_name ###
-### ################# ###
+### ############ ###
+### in_ecosystem ###
+### ############ ###
 
-variable in_ecosystem_name {
+variable in_ecosystem {
     description = "Creational stamp binding all infrastructure components created on behalf of this ecosystem instance."
 }
 
 
-### ################ ###
-### in_tag_timestamp ###
-### ################ ###
+### ############ ###
+### in_timestamp ###
+### ############ ###
 
-variable in_tag_timestamp {
+variable in_timestamp {
     description = "A timestamp for resource tags in the format ymmdd-hhmm like 80911-1435"
 }
 
 
-### ################## ###
-### in_tag_description ###
-### ################## ###
+### ############## ###
+### in_description ###
+### ############## ###
 
-variable in_tag_description {
+variable in_description {
     description = "Ubiquitous note detailing who, when, where and why for every infrastructure component."
 }
 

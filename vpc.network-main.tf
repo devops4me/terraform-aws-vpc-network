@@ -17,10 +17,10 @@ resource aws_vpc this_vpc {
 
     tags = {
 
-        Name   = "vpc-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Class = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc   = "This vpc for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+        Name   = "vpc-${ var.in_ecosystem }-${ var.in_timestamp }"
+        Class = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc   = "This vpc for ${ var.in_ecosystem } ${ var.in_description }"
     }
 }
 
@@ -45,10 +45,10 @@ resource aws_subnet private {
 
     tags = {
 
-        Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
-        Class    = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc     = "Private subnet no.${ count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_tag_description }"
+        Name     = "subnet-${ var.in_ecosystem }-${ var.in_timestamp }-${ format( "%02d", count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-x"
+        Class    = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc     = "Private subnet no.${ count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_description }"
     }
 
 }
@@ -74,10 +74,10 @@ resource aws_subnet public {
 
     tags = {
 
-        Name     = "subnet-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
-        Class    = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc     = "Public subnet no.${ var.in_num_private_subnets + count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_tag_description }"
+        Name     = "subnet-${ var.in_ecosystem }-${ var.in_timestamp }-${ format( "%02d", var.in_num_private_subnets + count.index + 1 ) }-az${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) }-o"
+        Class    = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc     = "Public subnet no.${ var.in_num_private_subnets + count.index + 1 } within availability zone ${ element( split( "-", element( data.aws_availability_zones.with.names, count.index ) ), 2 ) } ${ var.in_description }"
     }
 
 }
@@ -102,10 +102,10 @@ resource aws_internet_gateway this {
 
     tags = {
 
-        Name  = "net-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Class = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc  = "This internet gateway for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+        Name  = "net-gateway-${ var.in_ecosystem }-${ var.in_timestamp }"
+        Class = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc  = "This internet gateway for ${ var.in_ecosystem } ${ var.in_description }"
     }
 }
 
@@ -142,10 +142,10 @@ resource aws_nat_gateway this {
 
     tags = {
 
-        Name     = "nat-gateway-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Class    = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc     = "This NAT gateway in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+        Name     = "nat-gateway-${ var.in_ecosystem }-${ var.in_timestamp }"
+        Class    = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc     = "This NAT gateway in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem } ${ var.in_description }"
     }
 }
 
@@ -223,10 +223,10 @@ resource aws_eip nat_gw_ip {
 
     tags = {
 
-        Name  = "elastic-ip-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Class = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc  = "This elastic IP in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+        Name  = "elastic-ip-${ var.in_ecosystem }-${ var.in_timestamp }"
+        Class = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc  = "This elastic IP in public subnet ${ element( aws_subnet.public.*.id, count.index ) } for ${ var.in_ecosystem } ${ var.in_description }"
     }
 }
 
@@ -245,10 +245,10 @@ resource aws_route_table private {
 
     tags = {
 
-        Name     = "route-table-${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Class    = "${ var.in_ecosystem_name }"
-        Instance = "${ var.in_ecosystem_name }-${ var.in_tag_timestamp }"
-        Desc     = "This route table associated with private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem_name } ${ var.in_tag_description }"
+        Name     = "route-table-${ var.in_ecosystem }-${ var.in_timestamp }"
+        Class    = "${ var.in_ecosystem }"
+        Instance = "${ var.in_ecosystem }-${ var.in_timestamp }"
+        Desc     = "This route table associated with private subnet ${ element( aws_subnet.private.*.id, count.index ) } for ${ var.in_ecosystem } ${ var.in_description }"
     }
 }
 
