@@ -3,12 +3,12 @@
 ### Example VPC Networks ###
 ### #################### ###
 
-module subnet-count-not-stated {
+module vpc-net {
 
     source = "./.."
-    in_ecosystem     = local.ecosystem_name
-    in_timestamp      = local.timestamp
-    in_description    = local.description
+    in_ecosystem   = "${ local.ecosystem_name }-00"
+    in_timestamp   = local.timestamp
+    in_description = local.description
 }
 
 
@@ -20,9 +20,9 @@ module just-two-subnets {
     in_num_public_subnets  = 2
     in_subnets_max         = "7"
 
-    in_ecosystem     = "${ local.ecosystem_name }-01"
-    in_timestamp      = local.timestamp
-    in_description    = local.description
+    in_ecosystem   = "${ local.ecosystem_name }-01"
+    in_timestamp   = local.timestamp
+    in_description = local.description
 }
 
 
@@ -35,9 +35,9 @@ module no-private-subnets {
     in_num_public_subnets  = 2
     in_create_public_gateway = false
 
-    in_ecosystem     = "${ local.ecosystem_name }-02"
-    in_timestamp      = local.timestamp
-    in_description    = local.description
+    in_ecosystem   = "${ local.ecosystem_name }-02"
+    in_timestamp   = local.timestamp
+    in_description = local.description
 }
 
 
@@ -50,9 +50,9 @@ module two-subnets-per-zone {
     in_create_public_gateway  = false
     in_create_private_gateway = false
 
-    in_ecosystem     = "${ local.ecosystem_name }-03"
-    in_timestamp      = local.timestamp
-    in_description    = local.description
+    in_ecosystem   = "${ local.ecosystem_name }-03"
+    in_timestamp   = local.timestamp
+    in_description = local.description
 }
 
 
@@ -60,9 +60,9 @@ module two-subnets-per-zone {
 ### Example VPC Network Outputs ###
 ### ########################### ###
 
-output subnet_ids_1{ value = module.subnet-count-not-stated.out_subnet_ids }
-output private_subnet_ids_1{ value = module.subnet-count-not-stated.out_private_subnet_ids }
-output public_subnet_ids_1{ value = module.subnet-count-not-stated.out_public_subnet_ids }
+output subnet_ids_1{ value = module.vpc-net.out_subnet_ids }
+output private_subnet_ids_1{ value = module.vpc-net.out_private_subnet_ids }
+output public_subnet_ids_1{ value = module.vpc-net.out_public_subnet_ids }
 
 output subnet_ids_2{ value = module.just-two-subnets.out_subnet_ids }
 output private_subnet_ids_2{ value = module.just-two-subnets.out_private_subnet_ids }
@@ -75,7 +75,6 @@ output public_subnet_ids_3{ value = module.no-private-subnets.out_public_subnet_
 output subnet_ids_4{ value = module.two-subnets-per-zone.out_subnet_ids }
 output private_subnet_ids_4{ value = module.two-subnets-per-zone.out_private_subnet_ids }
 output public_subnet_ids_4{ value = module.two-subnets-per-zone.out_public_subnet_ids }
-
 
 /*
  | --
@@ -96,7 +95,6 @@ provider aws {
 	}
     }
 }
-
 
 variable in_role_arn {
     description = "The Role ARN to use when we assume role to implement the provisioning."

@@ -26,16 +26,13 @@ terraform destroy
 
 | Input Variable             | Type    | Description                                                   | Required?      |
 |:-------------------------- |:-------:|:------------------------------------------------------------- |:--------------:|
-| **in_role_arn**            | String  | The VPC's Cidr defining the range of available IP addresses   | optional       |
+| **in_role_arn**            | String  | Pass if using an IAM role as the AWS access mechanism.        | optional       |
 
 ### What is the role arn?
 
 If you are using an IAM role as the AWS access mechanism then pass it as in_role_arn commonly through an environment variable named **TF_VAR_in_role_arn** in addition to the usual AWS access key, secret key and default region parameters.
 
- | -- Individuals and small businesses who don't have hundreds of AWS
- | -- accounts can omit the variable and thanks to dynamic assignment
- | -- the assume_role block will cease to exist.
-
+Individuals and small businesses who don't have hundreds of AWS accounts can omit the variable and thanks to dynamic assignment the assume_role block will cease to exist.
 
 
 ## Related Modules
