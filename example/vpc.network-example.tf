@@ -12,7 +12,7 @@ module vpc-net {
 }
 
 
-module just-two-subnets {
+module two-pub-priv-subnets {
 
     source                 = "./.."
     in_vpc_cidr            = "10.240.0.0/21"
@@ -34,23 +34,9 @@ module no-private-subnets {
     in_num_private_subnets = 0
     in_num_public_subnets  = 2
     in_create_public_gateway = false
-
-    in_ecosystem   = "${ local.ecosystem_name }-02"
-    in_timestamp   = local.timestamp
-    in_description = local.description
-}
-
-
-module two-subnets-per-zone {
-
-    source                    = "./.."
-    in_vpc_cidr               = "10.242.0.0/16"
-    in_num_private_subnets    = 6
-    in_num_public_subnets     = 6
-    in_create_public_gateway  = false
     in_create_private_gateway = false
 
-    in_ecosystem   = "${ local.ecosystem_name }-03"
+    in_ecosystem   = "${ local.ecosystem_name }-02"
     in_timestamp   = local.timestamp
     in_description = local.description
 }
@@ -64,17 +50,14 @@ output subnet_ids_1{ value = module.vpc-net.out_subnet_ids }
 output private_subnet_ids_1{ value = module.vpc-net.out_private_subnet_ids }
 output public_subnet_ids_1{ value = module.vpc-net.out_public_subnet_ids }
 
-output subnet_ids_2{ value = module.just-two-subnets.out_subnet_ids }
-output private_subnet_ids_2{ value = module.just-two-subnets.out_private_subnet_ids }
-output public_subnet_ids_2{ value = module.just-two-subnets.out_public_subnet_ids }
+output subnet_ids_2{ value = module.two-pub-priv-subnets.out_subnet_ids }
+output private_subnet_ids_2{ value = module.two-pub-priv-subnets.out_private_subnet_ids }
+output public_subnet_ids_2{ value = module.two-pub-priv-subnets.out_public_subnet_ids }
 
 output subnet_ids_3{ value = module.no-private-subnets.out_subnet_ids }
 output private_subnet_ids_3{ value = module.no-private-subnets.out_private_subnet_ids }
 output public_subnet_ids_3{ value = module.no-private-subnets.out_public_subnet_ids }
 
-output subnet_ids_4{ value = module.two-subnets-per-zone.out_subnet_ids }
-output private_subnet_ids_4{ value = module.two-subnets-per-zone.out_private_subnet_ids }
-output public_subnet_ids_4{ value = module.two-subnets-per-zone.out_public_subnet_ids }
 
 /*
  | --
