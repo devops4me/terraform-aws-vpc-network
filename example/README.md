@@ -1,19 +1,42 @@
 
-# Example | Creating a VPC Network
+# Example | Create an AWS VPC Network
 
 This example creates a VPC, subnets and the networking backbone to allow traffic to be routed in and also routed out to service endpoints on the internet. Let's first use docker then do the same thing with terraform installed on your machine.
 
 
 ## Docker | Create VPC Networks
 
-With docker, you need not worry about which Terraform version is installed on your machine. All you need is docker and your AWS access credentials.
+With docker, you need not worry about which Terraform version is installed on your machine. All you need are your AWS access credentials.
+
 
 ```
+docker build --rm --no-cache --tag devops4me/vpc-network .
+
+### This Actually Works (But the next problem is - CAN WE DESTROY)
+### ALSO this prompts  - we need to add -auto-approve to the docker file
+docker run -i -e AWS_DEFAULT_REGION=eu-west-1 -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXX -e TF_VAR_in_role_arn=ZZZZZZZZZZZZ  -t devops4me/vpc-network apply
+
+
+
+
+
+
+docker run -i -t devops4me/vpc-network \
+    --env AWS_DEFAULT_REGION=eu-west-1 apply
+
+
+
+git clone github.com/devops4me/terraform-aws-vpc-network
+cd terraform-aws-vpc-network/example
+docker build --rm --no-cache --tag devops4me/vpc-network .
+docker images
+docker run         \
+    --detach       \
+    --name vm.vpc  \
+    --network host \
+    --volume ${PWD}:/home/ubuntu \
+    devops4me/vpc-network;
 ```
-
-This **[Jenkinsfile](example/Jenkinsfile)** is used to continuously integrate this module thus guaranteeing correctness and reusability. Ensure you pin the (semantic) version of this module to avoid breaking change failures as it evolves both its functionality and keeps up with Terraform's rapid developmental pace.
-
-For even more peace of mind you can clone this project and use your own continuous integration facilities. Send a pull request for any changes that will benefit the Terraform community.
 
 
 ## How to Run the Example
@@ -50,15 +73,7 @@ If you are using an IAM role as the AWS access mechanism then pass it as in_role
 Individuals and small businesses who don't have hundreds of AWS accounts can omit the variable and thanks to dynamic assignment the assume_role block will cease to exist.
 
 
-docker run \
-    --detach \
-    --name vm.vpc-network \
-    --network host \
-    --volume ${PWD}:/home/ubuntu \
-    postgres:11.2;
+### The AWS 5 VPC's Limit
 
-
-
-
-## Related Modules
+The default VPC limit is just 5 and this test needs at least 10 so take yourself to the support section and request extension to say 25 - it will be done automatically in less than 5 minutes.
 

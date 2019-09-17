@@ -120,5 +120,5 @@ locals {
     ecosystem_name = "virtual-net"
     timestamp = formatdate( "YYMMDDhhmmss", timestamp() )
     date_time = formatdate( "EEEE, DD-MMM-YY hh:mm:ss ZZZ", timestamp() )
-    description = "was created by jenkins on ${ local.date_time }."
+    description = "was created by me on ${ local.date_time }."
 }
