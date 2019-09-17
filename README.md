@@ -21,7 +21,8 @@ The subnets are dished out across availability zones in a round robin fashion. Y
 
     module vpc-network
     {
-        source                 = "github.com/devops4me/terraform-aws-vpc-network"
+        source                 = "devops4me/vpc-network/aws"
+        version                = "1.0.1"
         in_vpc_cidr            = "10.245.0.0/16"
         in_num_private_subnets = 6
         in_num_public_subnets  = 3
