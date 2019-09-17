@@ -1,8 +1,4 @@
 
-################ ########################################## ########
-################ Module [[[subnets]]] Input Variables List. ########
-################ ########################################## ########
-
 ### ########### ###
 ### in_vpc_cidr ###
 ### ########### ###
@@ -84,7 +80,7 @@ variable in_ecosystem {
 
 variable in_timestamp {
     description = "A timestamp for resource tags in the format ymmdd-hhmm like 80911-1435"
-    default = local.timestamp
+    default = "timestamp"
 }
 
 
@@ -94,13 +90,9 @@ variable in_timestamp {
 
 variable in_description {
     description = "Ubiquitous note detailing who, when, where and why for every infrastructure component."
-    default = "This VPC network was created on ${ local.date_time }."
+    default = "This VPC network was created for an ecosystem."
 }
 
-
-################ ################################################### ########
-################ The key environment specific data source variables. ########
-################ ################################################### ########
 
 ### ############################### ###
 ### [[data]] aws_availability_zones ###
