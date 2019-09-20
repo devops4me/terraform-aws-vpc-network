@@ -7,8 +7,9 @@ This module's **default behaviour** is to create a VPC and then **create one pri
 
     module vpc-network
     {
-        source                 = "devops4me/vpc-network/aws"
-        version                = "1.0.2"
+        source   = "devops4me/vpc-network/aws"
+        version ~> "1.0.3"
+
         in_vpc_cidr            = "10.245.0.0/16"
         in_num_private_subnets = 6
         in_num_public_subnets  = 3
@@ -28,14 +29,15 @@ You can run the example to see this module create a number of VPCs with varying 
 
 | Input Variable             | Type    | Description                                                   | Default        |
 |:-------------------------- |:-------:|:------------------------------------------------------------- |:--------------:|
-| **in_vpc_cidr**            | String  | The VPC's Cidr defining the range of available IP addresses   | 10.42.0.0/16   |
-| **in_num_private_subnets** | Integer | Number of private subnets to create across availability zones | 3              |
-| **in_num_public_subnets**  | Integer | Number of public subnets to create across availability zones. If one or more an internet gateway and route to the internet will be created regardless of the value of the in_create_gateway boolean variable. | 3 |
-| **in_create_gateway**      | Boolean | If set to true an internet gateway and route will be created even when no public subnets are requested. | false |
-| **[in_subnets_max](https://www.devopswiki.co.uk/vpc/network-cidr)**         | Integer | 2 to the power of this is the max number of carvable subnets  | 4 (16 subnets) |
-| **in_ecosystem**           | String  | the class name of the ecosystem being built here              | eco-system     |
+| **`in_vpc_cidr`**          | string  | The VPC's Cidr defining the range of available IP addresses   | 10.42.0.0/16   |
+| **`in_num_private_subnets`** | number | Number of private subnets to create across availability zones | 3              |
+| **`in_num_public_subnets`**  | number | Number of public subnets to create across availability zones. If one or more an internet gateway and route to the internet will be created regardless of the value of the in_create_gateway boolean variable. | 3 |
+| **`in_create_public_gateway`** | bool | if true create an internet gateway and routes so services can access the internet. | true |
+| **`in_create_private_gateway`** | bool | if true creates a NAT gateway and private routes for egress access from private subnets. | true |
+| **`in_subnets_max`** | Integer | 2 to the power of this is the [max number of carvable subnets](https://www.devopswiki.co.uk/vpc/network-cidr)  | 4 (16 subnets) |
 
-### Resource Tag Inputs
+
+### Optional Resource Tag Inputs
 
 Most organisations have a mandatory set of tags that must be placed on AWS resources for cost and billing reports. Typically they denote owners and specify whether environments are prod or non-prod.
 
@@ -87,11 +89,11 @@ Here are the most popular **output variables** exported from this VPC and subnet
 
 | Exported | Type | Example | Comment |
 |:-------- |:---- |:------- |:------- |
-**out_vpc_id** | String | vpc-1234567890 | the **VPC id** of the just-created VPC
-**out_rtb_id** | String | "rtb-2468013579" | ID of the VPC's default route table
-**out_subnet_ids** | List of Strings | [ "subnet-545123498798345", "subnet-83507325124987" ] | list of **all private and public** subnet ids
-**out_private_subnet_ids** | List of Strings | [ "subnet-545123498798345", "subnet-83507325124987" ] | list of **private** subnet ids
-**out_public_subnet_ids** | List of Strings |  [ "subnet-945873408204034", "subnet-8940202943031" ] | list of **public** subnet ids
+**`out_vpc_id`** | String | vpc-1234567890 | the **VPC id** of the just-created VPC
+**`out_rtb_id`** | String | "rtb-2468013579" | ID of the VPC's default route table
+**`out_subnet_ids`** | List of Strings | [ "subnet-545123498798345", "subnet-83507325124987" ] | list of **all private and public** subnet ids
+**`out_private_subnet_ids`** | List of Strings | [ "subnet-545123498798345", "subnet-83507325124987" ] | list of **private** subnet ids
+**`out_public_subnet_ids`** | List of Strings |  [ "subnet-945873408204034", "subnet-8940202943031" ] | list of **public** subnet ids
 
 
 ---
