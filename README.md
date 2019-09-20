@@ -7,8 +7,8 @@ This module's **default behaviour** is to create a VPC and then **create one pri
 
     module vpc-network
     {
-        source   = "devops4me/vpc-network/aws"
-        version ~> "1.0.3"
+        source  = "devops4me/vpc-network/aws"
+        version = "~> 1.0.3"
 
         in_vpc_cidr            = "10.245.0.0/16"
         in_num_private_subnets = 6
@@ -34,7 +34,7 @@ You can run the example to see this module create a number of VPCs with varying 
 | **`in_num_public_subnets`**  | number | Number of public subnets to create across availability zones. If one or more an internet gateway and route to the internet will be created regardless of the value of the in_create_gateway boolean variable. | 3 |
 | **`in_create_public_gateway`** | bool | if true create an internet gateway and routes so services can access the internet. | true |
 | **`in_create_private_gateway`** | bool | if true creates a NAT gateway and private routes for egress access from private subnets. | true |
-| **`in_subnets_max`** | Integer | 2 to the power of this is the [max number of carvable subnets](https://www.devopswiki.co.uk/vpc/network-cidr)  | 4 (16 subnets) |
+| **`in_subnets_max`** | number | 2 to the power of this is the [max number of carvable subnets](https://www.devopswiki.co.uk/vpc/network-cidr) So 2<sup>4</sup> = 16 subnets | 4 |
 
 
 ### Optional Resource Tag Inputs
