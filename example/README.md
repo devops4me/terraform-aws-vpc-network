@@ -1,79 +1,81 @@
 
-# Example | Create an AWS VPC Network
+# Terraform Docker Example | Create an AWS VPC Network
 
-This example creates a VPC, subnets and the networking backbone to allow traffic to be routed in and also routed out to service endpoints on the internet. Let's first use docker then do the same thing with terraform installed on your machine.
+This example creates a VPC, subnets and the networking backbone to allow traffic to be routed in and also routed out to service endpoints on the internet.
 
+### Step 1 | git clone into docker volume
 
-## Docker | Create VPC Networks
-
-With docker, you need not worry about which Terraform version is installed on your machine. All you need are your AWS access credentials.
-
+First we create a docker volume (called **`vol.tfstate`**) and add the terraform module code to it by way of an **alpine git** container.
 
 ```
-docker build --rm --no-cache --tag devops4me/vpc-network .
-
-### This Actually Works (But the next problem is - CAN WE DESTROY)
-### ALSO this prompts  - we need to add -auto-approve to the docker file
-docker run -i -e AWS_DEFAULT_REGION=eu-west-1 -e AWS_ACCESS_KEY_ID=XXXXXXXXXXXXX -e AWS_SECRET_ACCESS_KEY=XXXXXXX -e TF_VAR_in_role_arn=ZZZZZZZZZZZZ  -t devops4me/vpc-network apply
-
-
-
-
-
-
-docker run -i -t devops4me/vpc-network \
-    --env AWS_DEFAULT_REGION=eu-west-1 apply
-
-
-
-git clone github.com/devops4me/terraform-aws-vpc-network
-cd terraform-aws-vpc-network/example
-docker build --rm --no-cache --tag devops4me/vpc-network .
-docker images
-docker run         \
-    --detach       \
-    --name vm.vpc  \
-    --network host \
-    --volume ${PWD}:/home/ubuntu \
-    devops4me/vpc-network;
+docker volume create vol.tfstate
+docker run --interactive \
+           --tty         \
+	   --rm          \
+	   --volume vol.tfstate:/terraform-work \
+	   alpine/git \
+	   clone https://github.com/devops4me/terraform-aws-vpc-network /terraform-work
+sudo ls -lah /var/lib/docker/volumes/vol.tfstate/_data
 ```
 
+**verify** - when you list the files in the container you will see the terraform module's contents there.
 
-## How to Run the Example
+
+### Step 2 | terraform init via docker
+
+As our volume contains the terraform module code from git we are now ready to perform a terraform init. We use the **[devops4me/terraform container](https://cloud.docker.com/repository/docker/devops4me/terraform/general)** container which adds a VOLUME mapping to the **[hashicorp/terraform](https://hub.docker.com/r/hashicorp/terraform/)** container at the **`/terraform-work`** location.
 
 ```
-# get module and go to example directory
-git clone github.com/devops4me/terraform-aws-vpc-network
-cd terraform-aws-vpc-network/example
-
-# export access information
-export TF_VAR_in_role_arn=<<role-arn>>
-export AWS_ACCESS_KEY_ID=<<access-key-id>>
-export AWS_SECRET_ACCESS_KEY=<<secret-access-key>>
-export AWS_DEFAULT_REGION=<<region-key>>
-
-# use terraform to bring up and tear down infastructure
-terraform init
-terraform providers
-terraform apply -auto-approve
-terraform show
-terraform destroy -auto-approve
+docker run --interactive \
+           --tty \
+	   --rm \
+	   --name vm.terraform \
+	   --volume vol.tfstate:/terraform-work \
+	   devops4me/terraform init example
+sudo ls -lah /var/lib/docker/volumes/vol.tfstate/_data
 ```
 
-## Inputs
-
-| Input Variable             | Type    | Description                                                   | Required?      |
-|:-------------------------- |:-------:|:------------------------------------------------------------- |:--------------:|
-| **in_role_arn**            | String  | Pass if using an IAM role as the AWS access mechanism.        | optional       |
-
-### What is the role arn?
-
-If you are using an IAM role as the AWS access mechanism then pass it as in_role_arn commonly through an environment variable named **TF_VAR_in_role_arn** in addition to the usual AWS access key, secret key and default region parameters.
-
-Individuals and small businesses who don't have hundreds of AWS accounts can omit the variable and thanks to dynamic assignment the assume_role block will cease to exist.
+**verify** - the directory listing now contains a **`.terraform`** directory.
 
 
-### The AWS 5 VPC's Limit
 
-The default VPC limit is just 5 and this test needs at least 10 so take yourself to the support section and request extension to say 25 - it will be done automatically in less than 5 minutes.
+### Step 3 | terraform apply via docker
 
+At last we can run the terraform apply. Provide a **role arn** only if your organization works with roles alongside the other 3 AWS authentication keys.
+
+```
+docker run --interactive \
+           --tty \
+	   --rm \
+	   --name vm.terraform \
+	   --env AWS_DEFAULT_REGION=<<aws-region-key>> \
+	   --env AWS_ACCESS_KEY_ID=<<aws-access-key>> \
+	   --env AWS_SECRET_ACCESS_KEY=<<aws-secret-key>> \
+	   --env TF_VAR_in_role_arn=<<aws-role-arn>> \
+	   --volume vol.tfstate:/terraform-work \
+	   devops4me/terraform apply -auto-approve example
+sudo ls -lah /var/lib/docker/volumes/vol.tfstate/_data
+```
+
+**verify** - the **docker volume** now has a **tfstate file** which documents the state of your infrastructure after terraform apply.
+
+
+### Step 4 | terraform destroy via docker
+
+After running plan and apply either once or multiple times you may feel the need to **`terraform destroy`** the infrastructure.
+
+```
+docker run --interactive \
+           --tty \
+	   --rm \
+	   --name vm.terraform \
+	   --env AWS_DEFAULT_REGION=<<aws-region-key>> \
+	   --env AWS_ACCESS_KEY_ID=<<aws-access-key>> \
+	   --env AWS_SECRET_ACCESS_KEY=<<aws-secret-key>> \
+	   --env TF_VAR_in_role_arn=<<aws-role-arn>> \
+	   --volume vol.tfstate:/terraform-work \
+	   devops4me/terraform destroy -auto-approve example
+sudo ls -lah /var/lib/docker/volumes/vol.tfstate/_data
+```
+
+**verify** - check your AWS console and also note that the volume now has a **tfstate backup file** created by terraform.

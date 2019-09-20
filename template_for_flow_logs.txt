@@ -1,4 +1,0 @@
-
-### Use this template to create flow logs module
-
-
